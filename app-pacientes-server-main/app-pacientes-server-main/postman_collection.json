@@ -1,0 +1,431 @@
+{
+  "info": {
+    "name": "API Servidor Pacientes",
+    "description": "Colección completa de endpoints para el servidor de pacientes con funcionalidad de recetas por DNI escaneado",
+    "version": "2.0.0"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8000/app-pacientes-server",
+      "type": "string"
+    },
+    {
+      "key": "testDNI",
+      "value": "12345678",
+      "type": "string"
+    },
+    {
+      "key": "testPatientId",
+      "value": "1",
+      "type": "string"
+    },
+    {
+      "key": "testPrescriptionId",
+      "value": "1",
+      "type": "string"
+    }
+},
+  "item": [
+    {
+      "name": "🔍 Estado del Servidor",
+      "item": [
+        {
+          "name": "Status del Servidor",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/status",
+              "host": ["{{baseUrl}}"],
+              "path": ["status"]
+            },
+            "description": "Verificar que el servidor esté funcionando correctamente"
+          },
+          "response": []
+        },
+        {
+          "name": "Ruta Raíz",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/",
+              "host": ["{{baseUrl}}"],
+              "path": [""]
+            },
+            "description": "Información básica del servidor"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "👤 Gestión de Pacientes",
+      "item": [
+        {
+          "name": "Verificar Paciente por DNI",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/patients/check/{{testDNI}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "patients", "check", "{{testDNI}}"]
+            },
+            "description": "Verificar si existe un paciente con el DNI especificado"
+          },
+          "response": []
+        },
+        {
+          "name": "Verificar Paciente con Datos DNI",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "x-dni-data",
+                "value": "{\"dni\":\"{{testDNI}}\",\"nombre\":\"Juan Carlos\",\"apellido\":\"Pérez García\",\"genero\":\"M\",\"fechaNac\":\"15/01/1990\"}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/patients/check/{{testDNI}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "patients", "check", "{{testDNI}}"]
+            },
+            "description": "Verificar paciente y actualizar automáticamente con datos del DNI escaneado"
+          },
+          "response": []
+        },
+        {
+          "name": "Crear Nuevo Paciente",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"dni\": \"87654321\",\n  \"nombre\": \"María\",\n  \"apellido\": \"González\",\n  \"sexo\": \"F\",\n  \"fecnac\": \"1985-05-20\",\n  \"email\": \"maria@email.com\",\n  \"telefono\": \"1234567890\",\n  \"calle\": \"Av. Libertad\",\n  \"numero\": \"456\",\n  \"ciudad\": \"Buenos Aires\",\n  \"provincia\": \"Buenos Aires\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/patients",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "patients"]
+            },
+            "description": "Registrar un nuevo paciente en el sistema"
+          },
+          "response": []
+        },
+        {
+          "name": "Actualizar Paciente (Manual)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"nuevo@email.com\",\n  \"telefono\": \"0987654321\",\n  \"calle\": \"Nueva Calle\",\n  \"numero\": \"789\",\n  \"ciudad\": \"La Plata\",\n  \"provincia\": \"Buenos Aires\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/patients/{{testPatientId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "patients", "{{testPatientId}}"]
+            },
+            "description": "Actualizar datos de contacto y dirección del paciente"
+          },
+          "response": []
+        },
+        {
+          "name": "Actualizar con Datos DNI",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Juan Carlos\",\n  \"apellido\": \"Pérez García\",\n  \"fecnac\": \"1990-01-15\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/patients/{{testPatientId}}/dni-update",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "patients", "{{testPatientId}}", "dni-update"]
+            },
+            "description": "Actualizar paciente con datos obtenidos del DNI escaneado"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "📋 Gestión de Recetas",
+      "item": [
+        {
+          "name": "⭐ Obtener Recetas por DNI",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/prescriptions/dni/{{testDNI}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "prescriptions", "dni", "{{testDNI}}"]
+            },
+            "description": "ENDPOINT PRINCIPAL: Obtener todas las recetas de un paciente usando su DNI escaneado"
+          },
+          "response": []
+        },
+        {
+          "name": "Obtener Recetas por ID Paciente",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/prescriptions/patient/{{testPatientId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "prescriptions", "patient", "{{testPatientId}}"]
+            },
+            "description": "Obtener todas las recetas de un paciente usando su ID interno"
+          },
+          "response": []
+        },
+        {
+          "name": "Crear Nueva Receta",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"idpaciente\": {{testPatientId}},\n  \"num_receta_ofuscada\": \"REC-001-XXXX\",\n  \"fechavencimiento\": \"2025-02-15\",\n  \"descripcion\": \"Ibuprofeno 600mg - Tomar cada 8 horas\",\n  \"matricpresc\": \"12345\",\n  \"matricespec_prescr\": \"67890\",\n  \"lugaratencion\": \"Consultorio Dr. Smith\",\n  \"diagnostico\": \"Dolor de cabeza tensional\",\n  \"diagnostico2\": \"Estrés laboral\",\n  \"estado\": \"ACTIVA\",\n  \"idespecialidad\": \"1\",\n  \"device\": \"MOBILE_APP\",\n  \"empresa\": \"Clínica Central\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/prescriptions",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "prescriptions"]
+            },
+            "description": "Crear una nueva receta para un paciente"
+          },
+          "response": []
+        },
+        {
+          "name": "Crear Receta Mínima",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"idpaciente\": {{testPatientId}},\n  \"descripcion\": \"Paracetamol 500mg\",\n  \"diagnostico\": \"Fiebre\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/prescriptions",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "prescriptions"]
+            },
+            "description": "Crear una receta con los datos mínimos requeridos"
+          },
+          "response": []
+        },
+        {
+          "name": "Actualizar Receta",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"descripcion\": \"Ibuprofeno 400mg (dosis reducida) - Tomar cada 12 horas\",\n  \"fechavencimiento\": \"2025-02-20\",\n  \"diagnostico\": \"Dolor de cabeza leve\",\n  \"estado\": \"MODIFICADA\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/prescriptions/{{testPrescriptionId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "prescriptions", "{{testPrescriptionId}}"]
+            },
+            "description": "Actualizar una receta existente"
+          },
+          "response": []
+        },
+        {
+          "name": "Eliminar Receta",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/prescriptions/{{testPrescriptionId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "prescriptions", "{{testPrescriptionId}}"]
+            },
+            "description": "Eliminar una receta (soft delete - marca como ELIMINADA)"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "🔮 Funcionalidades Futuras",
+      "item": [
+        {
+          "name": "Citas Médicas (Placeholder)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/patients/{{testPatientId}}/appointments",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "patients", "{{testPatientId}}", "appointments"]
+            },
+            "description": "Endpoint placeholder para futuras funcionalidades de citas médicas"
+          },
+          "response": []
+        },
+        {
+          "name": "Estudios Médicos (Placeholder)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/patients/{{testPatientId}}/medical-tests",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "patients", "{{testPatientId}}", "medical-tests"]
+            },
+            "description": "Endpoint placeholder para futuras funcionalidades de estudios médicos"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "🧪 Casos de Prueba",
+      "item": [
+        {
+          "name": "Test - DNI No Existente",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/patients/check/99999999",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "patients", "check", "99999999"]
+            },
+            "description": "Probar con un DNI que no existe en la base de datos"
+          },
+          "response": []
+        },
+        {
+          "name": "Test - Recetas DNI No Existente",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/prescriptions/dni/99999999",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "prescriptions", "dni", "99999999"]
+            },
+            "description": "Probar obtener recetas con un DNI que no existe"
+          },
+          "response": []
+        },
+        {
+          "name": "Test - Crear Paciente Duplicado",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"dni\": \"{{testDNI}}\",\n  \"nombre\": \"Test\",\n  \"apellido\": \"Duplicado\",\n  \"sexo\": \"M\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/patients",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "patients"]
+            },
+            "description": "Probar crear un paciente con DNI duplicado (debería fallar)"
+          },
+          "response": []
+        },
+        {
+          "name": "Test - Datos Incompletos",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"dni\": \"11111111\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/patients",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "patients"]
+            },
+            "description": "Probar crear un paciente con datos incompletos (debería fallar)"
+          },
+          "response": []
+        }
+      ]
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "// Script que se ejecuta antes de cada request",
+          "console.log('Ejecutando request:', pm.info.requestName);"
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "// Tests básicos para todas las respuestas",
+          "pm.test('Status code es 200 o 201', function () {",
+          "    pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+          "});",
+          "",
+          "pm.test('Respuesta es JSON válido', function () {",
+          "    pm.response.to.have.jsonBody();",
+          "});",
+          "",
+          "pm.test('Tiempo de respuesta menor a 2000ms', function () {",
+          "    pm.expect(pm.response.responseTime).to.be.below(2000);",
+          "});"
+        ]
+      }
+    }
+  ]
